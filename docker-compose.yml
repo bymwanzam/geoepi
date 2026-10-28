@@ -1,0 +1,18 @@
+services:
+  geoepi:
+    build: .
+    ports: ["8000:8000"]
+    volumes:
+      - ./data:/data            # put module1_data/ here (one folder per dataset)
+      - jobs:/srv/jobs          # run history and outputs persist across restarts
+    environment:
+      JOB_WORKERS: "1"          # notebooks run one at a time; raise if the host has RAM/CPU
+      JOB_TIMEOUT: "3600"
+      MAX_UPLOAD_MB: "500"
+    mem_limit: 8g
+    cpus: 4
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    restart: unless-stopped
+volumes:
+  jobs:
